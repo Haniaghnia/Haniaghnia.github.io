@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hani Aghnia — Data Analyst</title>
+  <meta name="description" content="Data Analyst specializing in fintech, retention analytics, BI dashboards, and predictive modeling. Based in Jakarta, Indonesia." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #131b4c;
+      --bg-deep:      #0d1338;
+      --bg-card:      rgba(255,255,255,0.04);
+      --bg-card-h:    rgba(255,255,255,0.07);
+      --accent:       #00C9A7;
+      --accent-dim:   rgba(0,201,167,0.10);
+      --accent-glow:  rgba(0,201,167,0.22);
+      --accent-border:rgba(0,201,167,0.30);
+      --text:         #EEF2FF;
+      --text-muted:   #8B9FCC;
+      --text-faint:   #4f6190;
+      --border:       rgba(255,255,255,0.07);
+      --radius:       12px;
+      --ease:         cubic-bezier(0.4,0,0.2,1);
+      --t:            0.3s;
+      --font-d:       'Playfair Display', Georgia, serif;
+      --font-b:       'Inter', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-b);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img, svg { display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; }
+    ul { list-style: none; }
+
+    /* =============================================
+       REDUCED MOTION
+    ============================================= */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+      .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+      #hero-canvas { display: none; }
+      .scroll-hint { display: none; }
+    }
+
+    /* =============================================
+       SCROLL REVEAL
+    ============================================= */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.72s var(--ease), transform 0.72s var(--ease);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .d1 { transition-delay: 0.08s; }
+    .d2 { transition-delay: 0.16s; }
+    .d3 { transition-delay: 0.24s; }
+    .d4 { transition-delay: 0.32s; }
+    .d5 { transition-delay: 0.40s; }
+    .d6 { transition-delay: 0.48s; }
+
+    /* =============================================
+       LAYOUT
+    ============================================= */
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
+    section { padding: 110px 0; }
+
+    /* =============================================
+       SECTION HEADER
+    ============================================= */
+    .sh { margin-bottom: 64px; }
+    .sh-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+    .sh-label::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: var(--accent);
+    }
+    .sh h2 {
+      font-family: var(--font-d);
+      font-size: clamp(1.9rem, 4vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.12;
+    }
+    .sh-rule {
+      width: 44px;
+      height: 2px;
+      background: var(--accent);
+      margin-top: 18px;
+    }
+
+    /* =============================================
+       BUTTONS
+    ============================================= */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 30px;
+      border-radius: 6px;
+      font-size: 0.83rem;
+      font-weight: 600;
+      letter-spacing: 0.055em;
+      cursor: pointer;
+      border: none;
+      transition: transform var(--t) var(--ease), box-shadow var(--t) var(--ease), background var(--t), border-color var(--t), color var(--t);
+    }
+    .btn-primary { background: var(--accent); color: #0d1338; }
+    .btn-primary:hover { background: #00e6c0; transform: translateY(-2px); box-shadow: 0 10px 28px var(--accent-glow); }
+    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--accent-border); }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,201,167,0.12); }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+    /* =============================================
+       NAV
+    ============================================= */
+    #nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      padding: 22px 0;
+      transition: background var(--t), backdrop-filter var(--t), padding var(--t), border-color var(--t);
+      border-bottom: 1px solid transparent;
+    }
+    #nav.scrolled {
+      background: rgba(10,16,50,0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 16px 0;
+      border-color: var(--border);
+    }
+    #nav .container { display: flex; justify-content: space-between; align-items: center; }
+    .nav-logo {
+      font-family: var(--font-d);
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: var(--text);
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 34px; }
+    .nav-links a {
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      transition: color var(--t);
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--accent);
+      transition: width var(--t) var(--ease);
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-burger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .nav-burger span { display: block; width: 22px; height: 1.5px; background: var(--text); transition: var(--t); }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%; left: 0; right: 0;
+        flex-direction: column;
+        gap: 0;
+        background: rgba(10,16,50,0.98);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--border);
+      }
+      .nav-links.open { display: flex; }
+      .nav-links a { display: block; padding: 16px 28px; border-bottom: 1px solid var(--border); }
+      .nav-links a::after { display: none; }
+      .nav-burger { display: flex; }
+    }
+
+    /* =============================================
+       HERO
+    ============================================= */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.6;
+    }
+    /* Gradient fade at bottom */
+    #hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 160px;
+      background: linear-gradient(to bottom, transparent, var(--bg-deep));
+      pointer-events: none;
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      padding: 130px 0 100px;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 24px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 36px;
+      height: 1px;
+      background: var(--accent);
+    }
+    .hero-name {
+      font-family: var(--font-d);
+      font-size: clamp(3.4rem, 9vw, 7.5rem);
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -0.025em;
+      margin-bottom: 20px;
+    }
+    .hero-name em { font-style: italic; color: var(--accent); }
+    .hero-subtitle {
+      font-size: clamp(0.88rem, 2vw, 1.05rem);
+      font-weight: 300;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      margin-bottom: 32px;
+    }
+    .hero-quote {
+      font-size: clamp(0.92rem, 1.8vw, 1.08rem);
+      color: var(--text);
+      max-width: 580px;
+      line-height: 1.75;
+      border-left: 2px solid var(--accent);
+      padding-left: 22px;
+      margin-bottom: 52px;
+    }
+    .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+    .scroll-hint {
+      position: absolute;
+      bottom: 38px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-faint);
+      font-size: 0.65rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      z-index: 3;
+      animation: scrollPulse 2.2s ease-in-out infinite;
+    }
+    .scroll-hint-line {
+      width: 1px;
+      height: 42px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+    }
+    @keyframes scrollPulse {
+      0%,100% { transform: translateX(-50%) translateY(0); opacity: 0.7; }
+      50%      { transform: translateX(-50%) translateY(7px); opacity: 1; }
+    }
+
+    /* =============================================
+       ABOUT
+    ============================================= */
+    #about { background: var(--bg-deep); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 55fr 45fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .about-body p {
+      font-size: 1.02rem;
+      color: var(--text-muted);
+      line-height: 1.88;
+      margin-bottom: 18px;
+    }
+    .about-body p:last-child { margin-bottom: 0; }
+    .about-body strong { color: var(--text); font-weight: 600; }
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .stat-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 22px;
+      transition: background var(--t), border-color var(--t), transform var(--t);
+    }
+    .stat-box:hover {
+      background: var(--bg-card-h);
+      border-color: var(--accent-border);
+      transform: translateY(-3px);
+    }
+    .stat-n {
+      font-family: var(--font-d);
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat-n sup { font-size: 1.2rem; vertical-align: super; }
+    .stat-l { font-size: 0.78rem; color: var(--text-muted); line-height: 1.45; }
+
+    @media (max-width: 820px) { .about-grid { grid-template-columns: 1fr; gap: 52px; } }
+
+    /* =============================================
+       SKILLS
+    ============================================= */
+    #skills { background: var(--bg-deep); }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .skill-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 30px 26px;
+      transition: background var(--t), border-color var(--t);
+    }
+    .skill-box:hover { background: var(--bg-card-h); border-color: var(--accent-border); }
+    .skill-box-title {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 18px;
+    }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 7px; }
+    .stag {
+      display: inline-block;
+      padding: 5px 11px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.03);
+      transition: border-color var(--t), color var(--t), background var(--t);
+      cursor: default;
+    }
+    .stag:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
+    @media (max-width: 900px) { .skills-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 540px) { .skills-grid { grid-template-columns: 1fr; } }
+
+    /* =============================================
+       EXPERIENCE
+    ============================================= */
+    #experience { background: var(--bg); }
+    .timeline { position: relative; padding-left: 36px; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 10px; bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--accent) 0%, rgba(0,201,167,0.15) 80%, transparent 100%);
+    }
+    .tl-item { position: relative; margin-bottom: 60px; }
+    .tl-item:last-child { margin-bottom: 0; }
+    .tl-dot {
+      position: absolute;
+      left: -41px; top: 7px;
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--bg);
+      box-shadow: 0 0 0 3px var(--accent-dim);
+    }
+    .tl-period {
+      font-size: 0.73rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 5px;
+    }
+    .tl-role {
+      font-family: var(--font-d);
+      font-size: 1.45rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+    .tl-company {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+    .tl-bullets { }
+    .tl-bullets li {
+      position: relative;
+      padding-left: 22px;
+      color: var(--text-muted);
+      font-size: 0.91rem;
+      line-height: 1.72;
+      margin-bottom: 9px;
+    }
+    .tl-bullets li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: 300;
+    }
+    .tl-projects { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+    .tl-proj {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 2px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px;
+    }
+    .tl-proj-name {
+      font-size: 0.87rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .tl-proj p { font-size: 0.81rem; color: var(--text-muted); line-height: 1.62; }
+
+    /* =============================================
+       PROJECTS
+    ============================================= */
+    #projects { background: var(--bg-deep); }
+    .proj-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 48px;
+    }
+    .tab-btn {
+      padding: 8px 18px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: border-color var(--t), color var(--t), background var(--t);
+    }
+    .tab-btn:hover { border-color: var(--accent-border); color: var(--text); }
+    .tab-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+    .proj-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+    .proj-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: relative;
+      transition: border-color var(--t), background var(--t), transform var(--t), box-shadow var(--t);
+    }
+    .proj-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.35s var(--ease);
+    }
+    .proj-card:hover {
+      border-color: var(--accent-border);
+      background: var(--bg-card-h);
+      transform: translateY(-5px);
+      box-shadow: 0 22px 52px rgba(0,0,0,0.45);
+    }
+    .proj-card:hover::before { transform: scaleX(1); }
+    .proj-body { padding: 28px; }
+    .proj-cat {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 3px;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent-border);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 13px;
+    }
+    .proj-title {
+      font-family: var(--font-d);
+      font-size: 1.08rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+    .proj-desc { font-size: 0.83rem; color: var(--text-muted); line-height: 1.66; margin-bottom: 18px; }
+    .proj-stack { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 20px; }
+    .proj-stag {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 3px;
+      background: rgba(255,255,255,0.04);
+      font-size: 0.7rem;
+      color: var(--text-faint);
+    }
+    .proj-expand {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: gap var(--t);
+    }
+    .proj-expand:hover { gap: 10px; }
+    .proj-expand svg { transition: transform var(--t) var(--ease); }
+    .proj-expand.open svg { transform: rotate(180deg); }
+
+    .proj-detail {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.45s var(--ease);
+      border-top: 0px solid var(--border);
+    }
+    .proj-detail.open {
+      max-height: 700px;
+      border-top-width: 1px;
+    }
+    .proj-detail-body { padding: 24px 28px; display: flex; flex-direction: column; gap: 14px; }
+    .det-block {}
+    .det-label {
+      font-size: 0.64rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 5px;
+    }
+    .det-text { font-size: 0.82rem; color: var(--text-muted); line-height: 1.68; }
+
+    .proj-image-wrap {
+      width: 100%;
+      aspect-ratio: 16/10;
+      overflow: hidden;
+      background: var(--bg-deep);
+    }
+    .proj-image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.45s var(--ease);
+    }
+    .proj-card:hover .proj-image-wrap img { transform: scale(1.05); }
+    .proj-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+    .proj-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--accent);
+      border: 1px solid var(--accent-border);
+      padding: 8px 14px;
+      border-radius: 6px;
+      transition: background var(--t), color var(--t), border-color var(--t);
+    }
+    .proj-link-btn:hover { background: var(--accent-dim); border-color: var(--accent); }
+
+    @media (max-width: 1020px) { .proj-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 620px)  { .proj-grid { grid-template-columns: 1fr; } }
+
+    /* =============================================
+       EDUCATION
+    ============================================= */
+    #education { background: var(--bg); }
+    .edu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+    .edu-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 34px;
+      transition: border-color var(--t), background var(--t);
+    }
+    .edu-card:hover { border-color: var(--accent-border); background: var(--bg-card-h); }
+    .edu-type {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+    .edu-degree {
+      font-family: var(--font-d);
+      font-size: 1.12rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 6px;
+    }
+    .edu-degree span { color: var(--accent); }
+    .edu-school { font-size: 0.87rem; color: var(--text-muted); margin-bottom: 6px; }
+    .edu-meta { font-size: 0.78rem; color: var(--text-faint); }
+
+    .cert-list { display: flex; flex-direction: column; }
+    .cert-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .cert-item:first-child { padding-top: 0; }
+    .cert-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .cert-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-top: 5px; flex-shrink: 0; }
+    .cert-name { font-size: 0.86rem; color: var(--text); line-height: 1.4; margin-bottom: 2px; }
+    .cert-issuer { font-size: 0.75rem; color: var(--text-faint); }
+
+    @media (max-width: 700px) { .edu-grid { grid-template-columns: 1fr; } }
+
+    /* =============================================
+       CONTACT
+    ============================================= */
+    #contact { background: var(--bg-deep); text-align: center; padding: 120px 0; }
+    .contact-inner { max-width: 660px; margin: 0 auto; }
+    .contact-inner .sh-label { justify-content: center; margin-bottom: 18px; }
+    .contact-h {
+      font-family: var(--font-d);
+      font-size: clamp(2.1rem, 5vw, 3.8rem);
+      font-weight: 900;
+      line-height: 1.08;
+      margin-bottom: 22px;
+    }
+    .contact-h em { font-style: italic; color: var(--accent); }
+    .contact-sub { font-size: 1rem; color: var(--text-muted); line-height: 1.72; margin-bottom: 52px; }
+    .contact-links { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    footer {
+      background: var(--bg-deep);
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      text-align: center;
+    }
+    footer p { font-size: 0.76rem; color: var(--text-faint); }
+    footer a { color: var(--text-muted); transition: color var(--t); }
+    footer a:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <!-- ======================================================
+       NAV
+  ====================================================== -->
+  <nav id="nav" aria-label="Main navigation">
+    <div class="container">
+      <a href="#hero" class="nav-logo">HA<span>.</span></a>
+      <ul class="nav-links" id="nav-links" role="list">
+        <li><a href="#about">About</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#education">Education</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <button class="nav-burger" id="nav-burger" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ======================================================
+       HERO
+  ====================================================== -->
+  <section id="hero" aria-label="Introduction">
+    <canvas id="hero-canvas" aria-hidden="true"></canvas>
+    <div class="container">
+      <div class="hero-inner">
+        <div class="hero-eyebrow reveal">Data Analyst</div>
+        <h1 class="hero-name reveal d1">
+          Hani<br><em>Aghnia.</em>
+        </h1>
+        <p class="hero-subtitle reveal d2">
+          Data Analysis &nbsp;·&nbsp; Business Intelligence &nbsp;·&nbsp; Predictive Modeling
+        </p>
+        <p class="hero-quote reveal d3">
+          Transforming complex datasets into the clarity executives need to decide
+          with confidence — not tomorrow, <em style="color:var(--accent);font-style:italic">today</em>.
+        </p>
+        <div class="hero-ctas reveal d4">
+          <a href="#projects" class="btn btn-primary">View Projects</a>
+          <a href="#contact" class="btn btn-outline">Get in Touch</a>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-hint" aria-hidden="true">
+      <div class="scroll-hint-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       ABOUT
+  ====================================================== -->
+  <section id="about" aria-labelledby="about-heading">
+    <div class="container">
+      <div class="sh reveal">
+        <div class="sh-label">Profile</div>
+        <h2 id="about-heading">Analyst.<br>Storyteller.<br>Decision enabler.</h2>
+        <div class="sh-rule"></div>
+      </div>
+      <div class="about-grid">
+        <div class="about-body reveal d1">
+          <p>
+            Data analyst with a <strong>proven track record</strong> of transforming large, complex datasets into
+            clear, actionable insights. I bridge the gap between raw data and strategic decisions
+            that move business metrics — across fintech, maritime infrastructure, ESG, and e-commerce.
+          </p>
+          <p>
+            With a foundation in <strong>Statistics (Universitas Pendidikan Indonesia)</strong> and experience
+            delivering inside Telkomsel's subsidiary ecosystem, I bring both the technical depth
+            and the communication clarity that executive stakeholders actually need.
+          </p>
+          <p>
+            I don't just build dashboards — I define success metrics, run stakeholder alignment
+            sessions, and ensure insights reach the right person in the right format at the
+            right time. <strong>Data-driven decisions, not data for its own sake.</strong>
+          </p>
+        </div>
+        <div class="about-stats reveal d2">
+          <div class="stat-box">
+            <div class="stat-n"><span class="counter" data-target="20">0</span><sup>+</sup></div>
+            <div class="stat-l">Applications unified into a single data warehouse</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-n">10<sup>+</sup></div>
+            <div class="stat-l">Data sources integrated per ESG dashboard</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-n"><span class="counter" data-target="3">0</span><sup>+</sup></div>
+            <div class="stat-l">Years as a Data Analyst</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-n"><span class="counter" data-target="13">0</span><sup>+</sup></div>
+            <div class="stat-l">Projects across 5 industries</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       SKILLS
+  ====================================================== -->
+  <section id="skills" aria-labelledby="skills-heading">
+    <div class="container">
+      <div class="sh reveal">
+        <div class="sh-label">Capabilities</div>
+        <h2 id="skills-heading">Tools &amp; Expertise</h2>
+        <div class="sh-rule"></div>
+      </div>
+      <div class="skills-grid">
+        <div class="skill-box reveal d1">
+          <div class="skill-box-title">BI &amp; Visualization</div>
+          <div class="skill-tags">
+            <span class="stag">Power BI</span>
+            <span class="stag">Tableau</span>
+            <span class="stag">Google Data Studio</span>
+            <span class="stag">Apache Superset</span>
+            <span class="stag">Google Analytics</span>
+          </div>
+        </div>
+        <div class="skill-box reveal d2">
+          <div class="skill-box-title">Data Engineering</div>
+          <div class="skill-tags">
+            <span class="stag">SQL</span>
+            <span class="stag">BigQuery</span>
+            <span class="stag">Pentaho</span>
+            <span class="stag">ETL Pipelines</span>
+            <span class="stag">Data Warehouse</span>
+          </div>
+        </div>
+        <div class="skill-box reveal d3">
+          <div class="skill-box-title">Analytics &amp; ML</div>
+          <div class="skill-tags">
+            <span class="stag">Python</span>
+            <span class="stag">Statistical Analysis</span>
+            <span class="stag">Predictive Modeling</span>
+            <span class="stag">Random Forest</span>
+            <span class="stag">EDA</span>
+          </div>
+        </div>
+        <div class="skill-box reveal d4">
+          <div class="skill-box-title">Office &amp; Productivity</div>
+          <div class="skill-tags">
+            <span class="stag">Advanced Excel</span>
+            <span class="stag">Pivot Tables</span>
+            <span class="stag">Power Query</span>
+            <span class="stag">Slicers</span>
+          </div>
+        </div>
+        <div class="skill-box reveal d5">
+          <div class="skill-box-title">Domain Expertise</div>
+          <div class="skill-tags">
+            <span class="stag">Fintech / Risk</span>
+            <span class="stag">Retention Strategy</span>
+            <span class="stag">ESG Reporting</span>
+            <span class="stag">Marketing Analytics</span>
+            <span class="stag">E-Commerce</span>
+          </div>
+        </div>
+        <div class="skill-box reveal d6">
+          <div class="skill-box-title">Methodology</div>
+          <div class="skill-tags">
+            <span class="stag">Agile / SCRUM</span>
+            <span class="stag">Data Storytelling</span>
+            <span class="stag">BRD Creation</span>
+            <span class="stag">Stakeholder Mgmt</span>
+            <span class="stag">Cross-functional Collab</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       EXPERIENCE
+  ====================================================== -->
+  <section id="experience" aria-labelledby="exp-heading">
+    <div class="container">
+      <div class="sh reveal">
+        <div class="sh-label">Career</div>
+        <h2 id="exp-heading">Work Experience</h2>
+        <div class="sh-rule"></div>
+      </div>
+      <div class="timeline">
+
+        <div class="tl-item reveal">
+          <div class="tl-dot"></div>
+          <div class="tl-period">Jul 2024 — Present</div>
+          <div class="tl-role">Data Analyst</div>
+          <div class="tl-company">Indico by Telkomsel &nbsp;·&nbsp; Jakarta</div>
+          <ul class="tl-bullets">
+            <li>Partner with Product and Data Engineering teams to optimize data pipelines across Edutech, Healthtech, and Game Publishing subsidiaries — improving data accuracy and reliability for downstream reporting.</li>
+            <li>Transform large, complex, multi-subsidiary datasets into clear, actionable insights that inform cross-functional strategic decisions.</li>
+            <li>Built and deployed automated Apache Superset dashboards tracking real-time KPI performance, replacing manual reporting cycles.</li>
+            <li>Conduct regular and ad-hoc trend analysis, identify anomalies, and present findings directly to executive stakeholders.</li>
+            <li>Streamline cross-functional workflows by defining success metrics and running data storytelling sessions for non-technical teams.</li>
+          </ul>
+        </div>
+
+        <div class="tl-item reveal d1">
+          <div class="tl-dot"></div>
+          <div class="tl-period">Project-Based Contract</div>
+          <div class="tl-role">Data Analyst</div>
+          <div class="tl-company">PT Microvac Indonesia &nbsp;·&nbsp; Jakarta</div>
+          <div class="tl-projects">
+            <div class="tl-proj">
+              <div class="tl-proj-name">MaritimHUB Integrated Data Service Portal</div>
+              <p>Integrated data from 20+ applications into a PostgreSQL-based data mart for Indonesia's maritime sector, using Pentaho for ETL processing — consolidating previously fragmented sources into a single, structured layer that powered actionable, dashboard-ready insights for stakeholders.</p>
+            </div>
+            <div class="tl-proj">
+              <div class="tl-proj-name">ESG Data HUB</div>
+              <p>Transitioned ESG performance reporting from a manual, Excel-based process to a real-time Power BI dashboard integrating 10+ data sources — giving stakeholders self-serve, always-current visibility into sustainability metrics for the first time.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-item reveal d2">
+          <div class="tl-dot"></div>
+          <div class="tl-period">Sep 2022 — Oct 2022</div>
+          <div class="tl-role">Data Scientist &mdash; Virtual Internship</div>
+          <div class="tl-company">ID/X Partners &times; Rakamin Academy</div>
+          <ul class="tl-bullets">
+            <li>Engaged in data warehouse design, data analysis, machine learning implementation, and business strategy development.</li>
+            <li>Analyzed trends and patterns informing strategic marketing decisions, contributing to a 25% increase in online student enrollment.</li>
+            <li>Produced consumer behavior and market trend reports to support data-driven marketing decision-making.</li>
+          </ul>
+        </div>
+
+        <div class="tl-item reveal d3">
+          <div class="tl-dot"></div>
+          <div class="tl-period">Dec 2021 — Jun 2022</div>
+          <div class="tl-role">Market Research Analyst</div>
+          <div class="tl-company">Wira Cendikia &nbsp;·&nbsp; Bandung</div>
+        </div>
+
+        <div class="tl-item reveal d4">
+          <div class="tl-dot"></div>
+          <div class="tl-period">Aug 2020 — Mar 2021</div>
+          <div class="tl-role">Project Management Officer</div>
+          <div class="tl-company">PT WOM Finance</div>
+          <ul class="tl-bullets">
+            <li>Built reporting dashboards and analyzed customer profiles to support business reporting — an early foundation for the later transition into data analytics.</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       PROJECTS
+  ====================================================== -->
+  <section id="projects" aria-labelledby="proj-heading">
+    <div class="container">
+      <div class="sh reveal">
+        <div class="sh-label">Portfolio</div>
+        <h2 id="proj-heading">Selected Projects</h2>
+        <div class="sh-rule"></div>
+      </div>
+      <div class="proj-tabs" role="tablist" aria-label="Filter projects by category">
+        <button class="tab-btn active" data-filter="all"       role="tab" aria-selected="true">All</button>
+        <button class="tab-btn"         data-filter="dashboard" role="tab" aria-selected="false">Dashboards</button>
+        <button class="tab-btn"         data-filter="analysis"  role="tab" aria-selected="false">Data Analysis</button>
+        <button class="tab-btn"         data-filter="ml"        role="tab" aria-selected="false">ML &amp; Analytics</button>
+        <button class="tab-btn"         data-filter="sql"       role="tab" aria-selected="false">SQL</button>
+      </div>
+      <div class="proj-grid" id="proj-grid" role="list"></div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       EDUCATION
+  ====================================================== -->
+  <section id="education" aria-labelledby="edu-heading">
+    <div class="container">
+      <div class="sh reveal">
+        <div class="sh-label">Credentials</div>
+        <h2 id="edu-heading">Education &amp; Certifications</h2>
+        <div class="sh-rule"></div>
+      </div>
+      <div class="edu-grid">
+        <div class="edu-card reveal">
+          <div class="edu-type">Degree</div>
+          <div class="edu-degree">Bachelor of Mathematics<br><span>Concentrate: Statistics</span></div>
+          <div class="edu-school">Universitas Pendidikan Indonesia &nbsp;·&nbsp; Bandung</div>
+          <div class="edu-meta">Graduated 2016 &nbsp;·&nbsp; GPA 3.01 / 4.00</div>
+        </div>
+        <div class="edu-card reveal d1">
+          <div class="edu-type">Certifications</div>
+          <div class="cert-list">
+            <div class="cert-item">
+              <div class="cert-dot"></div>
+              <div>
+                <div class="cert-name">Associate Data Scientist (BNSP)</div>
+                <div class="cert-issuer">Business Intelligence &nbsp;·&nbsp; Rakamin Academy</div>
+              </div>
+            </div>
+            <div class="cert-item">
+              <div class="cert-dot"></div>
+              <div>
+                <div class="cert-name">Google Data Analytics Professional Certificate</div>
+                <div class="cert-issuer">Coursera &nbsp;·&nbsp; 2023</div>
+              </div>
+            </div>
+            <div class="cert-item">
+              <div class="cert-dot"></div>
+              <div>
+                <div class="cert-name">Excel Fundamentals for Data Analysis</div>
+                <div class="cert-issuer">Coursera</div>
+              </div>
+            </div>
+            <div class="cert-item">
+              <div class="cert-dot"></div>
+              <div>
+                <div class="cert-name">SQL for Data Science</div>
+                <div class="cert-issuer">Coursera</div>
+              </div>
+            </div>
+            <div class="cert-item">
+              <div class="cert-dot"></div>
+              <div>
+                <div class="cert-name">Data Analysis with Python</div>
+                <div class="cert-issuer">Coursera</div>
+              </div>
+            </div>
+            <div class="cert-item">
+              <div class="cert-dot"></div>
+              <div>
+                <div class="cert-name">Google Analytics Certification</div>
+                <div class="cert-issuer">Google</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       CONTACT
+  ====================================================== -->
+  <section id="contact" aria-labelledby="contact-heading">
+    <div class="container">
+      <div class="contact-inner reveal">
+        <div class="sh-label" style="justify-content:center;">Let's Connect</div>
+        <h2 class="contact-h" id="contact-heading">
+          Ready to turn your<br><em>data into decisions?</em>
+        </h2>
+        <p class="contact-sub">
+          Open to senior data analyst and fintech retention analyst roles.<br>
+          Jakarta-based &nbsp;·&nbsp; Available for executive conversations.
+        </p>
+        <div class="contact-links">
+          <a href="mailto:rahmaniaghnia07@gmail.com" class="btn btn-primary">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            Send Email
+          </a>
+          <a href="https://www.linkedin.com/in/haniaghnia/" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+            LinkedIn
+          </a>
+          <a href="https://haniaghnia.wixsite.com/dataenthusiast" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 1 0 20 14.5 14.5 0 0 1 0-20"/><path d="M2 12h20"/></svg>
+            Portfolio Site
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 <a href="#hero">Hani Aghnia</a> &nbsp;·&nbsp; Data Analyst &nbsp;·&nbsp; Jakarta, Indonesia</p>
+    </div>
+  </footer>
+
+  <!-- ======================================================
+       JAVASCRIPT
+  ====================================================== -->
+  <script>
+  (function () {
+    'use strict';
+
+    /* --------------------------------------------------
+       PROJECT DATA
+    -------------------------------------------------- */
+    var PROJECTS = [
+      {
+        id: 1,
+        filter: 'dashboard',
+        tag: 'Dashboard',
+        title: 'ESG Performance Dashboard',
+        desc: 'Real-time Power BI dashboard integrating 10+ data sources, replacing a manual Excel-based ESG reporting process at PT Microvac Indonesia.',
+        stack: ['Power BI', 'SQL', 'ETL', 'DAX'],
+        image: 'https://github.com/Haniaghnia/Hani_Portfolio/raw/cb8a64569eec66c7682d31546653c294444ee009/Power%20BI/ESG/Power%20BI%20Dashboard_data_enthusiast.png',
+        link: { label: 'View Case Study', url: 'https://github.com/Haniaghnia/Hani_Portfolio/blob/main/Power%20BI/ESG/Project.md' },
+        context: 'PT Microvac Indonesia needed unified visibility into Environmental, Social, and Governance metrics — data was scattered across 10+ siloed systems and compiled manually in Excel.',
+        approach: 'Designed a real-time Power BI dashboard integrating 10+ disparate data sources. Built ETL pipelines to standardize formats and enable category-level drill-down by ESG dimension.',
+        finding: 'ESG data fragmentation meant no single source of truth existed for sustainability KPIs, and compiling a compliance report required manually reconciling numbers across separate spreadsheets every cycle.',
+        recommendation: 'Replace the manual compilation process with a unified, self-serve dashboard so stakeholders can pull current ESG metrics on demand instead of waiting on an analyst.',
+        result: 'Manual, Excel-based ESG reporting replaced with a real-time, self-serve Power BI dashboard across 10+ integrated data sources.'
+      },
+      {
+        id: 2,
+        filter: 'dashboard',
+        tag: 'Dashboard',
+        title: 'Website Performance Analysis',
+        desc: 'Multi-segment Google Data Studio dashboard built on the Google Merchandise Store dataset — consolidating overview, engagement, acquisition, and audience analytics into one view.',
+        stack: ['Google Data Studio', 'Google Analytics', 'SQL'],
+        link: { label: 'View Case Study', url: 'https://github.com/Haniaghnia/Hani_Portfolio/blob/181f11d894507671de48774de40f18edc70f821a/Google%20Studio/Website%20Performance/Website%20Performance.md' },
+        context: 'Case study built on Google\u2019s public Merchandise Store analytics dataset, structured around a real business question: how do you give stakeholders one consolidated view of web performance instead of four disconnected reports?',
+        approach: 'Built a Google Data Studio dashboard segmented into four views: Overview, Engagement, Acquisition, and Audience, connected directly to the GA data stream.',
+        finding: 'Engagement quality varied meaningfully by acquisition channel \u2014 a pattern that, in a live business, would directly inform where marketing spend should be concentrated rather than spread evenly.',
+        recommendation: 'In a live setting, this structure lets stakeholders self-serve channel-level engagement data and reallocate budget toward higher-engagement sources without waiting on ad-hoc analyst requests.',
+        result: 'Four previously separate reporting views consolidated into a single, segmented, self-serve dashboard.'
+      },
+      {
+        id: 3,
+        filter: 'dashboard',
+        tag: 'Dashboard',
+        title: 'Supermarket Sales Dashboard',
+        desc: 'Advanced Excel dashboard with pivot tables, slicers, and Power Query automation \u2014 tracking sales and profit by product category and region.',
+        stack: ['Excel', 'Pivot Tables', 'Power Query', 'Slicers'],
+        image: 'https://github.com/Haniaghnia/Hani_Portfolio/raw/main/Excel/Dashboard%20Supermarket.PNG',
+        link: { label: 'View Case Study', url: 'https://github.com/Haniaghnia/Hani_Portfolio/blob/main/Excel/Dashboard%20Supermarket%20shop%20Sales.md' },
+        context: 'Case study demonstrating a self-service sales reporting tool built entirely in Excel \u2014 no BI software licensing or technical upkeep required, relevant for smaller retail operations.',
+        approach: 'Built entirely in Excel using advanced functions, pivot tables, and slicers, with Power Query automating data refresh to eliminate manual update cycles.',
+        finding: 'A small number of product categories and regions disproportionately drove both revenue and returns \u2014 a pattern only visible once the data was sliced at the sub-category and regional level rather than viewed in aggregate.',
+        recommendation: 'Use the slicer-based regional and category breakdown as a recurring tool for flagging underperforming or high-return product lines during sales reviews.',
+        result: 'A single dynamic, slicer-driven dashboard replacing static monthly spreadsheet reporting.'
+      },
+      {
+        id: 4,
+        filter: 'dashboard',
+        tag: 'Dashboard',
+        title: 'Big Data Analytics Dashboard',
+        desc: 'Google Data Studio dashboard powered by SQL and BigQuery pipelines \u2014 built to surface trends from large datasets without requiring end users to know SQL.',
+        stack: ['Google Data Studio', 'SQL', 'BigQuery'],
+        link: { label: 'View Case Study', url: 'https://github.com/Haniaghnia/Hani_Portfolio/blob/5a0f5d1022c9f0320a78e8878a997d87def29e93/Google%20Studio/Project%20Big%20data%20Analyst/BDA.md' },
+        context: 'Case study addressing a common business gap: stakeholders need to monitor trends in large datasets, but most don\u2019t write SQL and can\u2019t wait for a monthly summary to catch a shift early.',
+        approach: 'Built SQL queries in BigQuery to pre-aggregate key metrics, connected to Google Data Studio for live visualization with parameterized filters for self-service exploration.',
+        finding: 'Monthly-only reporting cycles are structurally too slow to catch emerging trend shifts \u2014 by the time a pattern shows up in a monthly summary, the window for proactive response has often already closed.',
+        recommendation: 'Move to a live, query-backed dashboard with shorter-cycle monitoring so stakeholders can self-serve current trends instead of waiting on the next scheduled report.',
+        result: 'A live, query-backed dashboard enabling non-technical stakeholders to self-serve trend data without SQL knowledge.'
+      },
+      {
+        id: 5,
+        filter: 'analysis',
+        tag: 'Data Analysis',
+        title: 'MaritimHUB Data Service Portal',
+        desc: 'Integrated data from 20+ applications into a PostgreSQL-based data mart for Indonesia\u2019s maritime sector, using Pentaho for ETL processing.',
+        stack: ['SQL', 'PostgreSQL', 'Pentaho', 'ETL', 'Data Warehouse'],
+        link: { label: 'View Case Study', url: 'https://github.com/Haniaghnia/Hani_Portfolio/blob/41486d8c57e000330b0becf64781e43ac2af6041/Data%20Engeenering/Sehati/Readme_sehati.md' },
+        context: 'Indonesia\u2019s maritime infrastructure relied on 20+ siloed legacy applications. No unified data layer existed for operational or strategic decision-making across the sector.',
+        approach: 'Built a PostgreSQL-based data mart and used Pentaho to architect and run the ETL pipelines integrating all sources, with governance and validation layers to catch inconsistent records.',
+        finding: 'Inconsistent data formats and undocumented schema differences across the 20+ source systems were the main blocker to a trustworthy unified view \u2014 not data volume, but data inconsistency.',
+        recommendation: 'Establish master data management standards and automated validation checks so new source systems can be onboarded without re-introducing the same inconsistency problems.',
+        result: '20+ previously siloed systems consolidated into a single PostgreSQL data mart, giving stakeholders dashboard-ready access to data that was previously fragmented across disconnected applications.'
+      },
+      {
+        id: 6,
+        filter: 'analysis',
+        tag: 'Data Analysis',
+        title: 'Marketing Funnel Analysis',
+        desc: 'E-commerce funnel analysis on the public Olist dataset \u2014 identifying high-performing channels, profiling target audiences, and surfacing conversion drop-offs.',
+        stack: ['Python', 'SQL', 'Tableau'],
+        link: { label: 'View Case Study', url: 'https://github.com/Haniaghnia/Hani_Portfolio/blob/181f11d894507671de48774de40f18edc70f821a/Tableau/E-Commerce/Marketing%20funnel/Marketing%20funnel%20E-Commerce.md' },
+        context: 'Case study on Olist\u2019s public seller-acquisition dataset, framed around a question every e-commerce business asks: which marketing channels bring in customers who actually stick around?',
+        approach: 'Mapped the full marketing funnel from acquisition to repeat purchase using the Olist dataset, then segmented by channel to profile behavioral differences between high- and low-retention traffic.',
+        finding: 'Channel volume and channel quality (measured by repeat-purchase behavior) did not move together \u2014 the channels bringing in the most leads were not the same ones bringing in the most retained customers.',
+        recommendation: 'In a live business, this reframes the marketing conversation from "which channel brings the most leads" to "which channel brings the most retained customers" \u2014 a meaningfully different budget allocation question.',
+        result: 'Funnel-stage and channel-level retention behavior mapped, surfacing a volume-vs-quality distinction the dataset\u2019s aggregate numbers did not show.'
+      },
+      {
+        id: 7,
+        filter: 'analysis',
+        tag: 'Data Analysis',
+        title: 'Credit Risk Analysis \u2014 Bank BTPN Case Study',
+        desc: 'Credit card default risk case study using SQL-based datamart design and Power BI visualizations, modeled on Bank BTPN Indonesia\u2019s credit card portfolio.',
+        stack: ['SQL', 'Power BI', 'Statistical Analysis'],
+        link: { label: 'View Case Study', url: 'https://drive.google.com/file/d/14REkYuzuHf2uZYkf6LWCgdmaECatS0Z9/view' },
+        context: 'Case study addressing a real banking problem: credit card revenue growth is only valuable if defaults don\u2019t grow faster \u2014 the bank needed a systematic way to see default risk before it materialized, not after.',
+        approach: 'Designed a SQL-based datamart to structure payment history for analysis, then performed risk segmentation and built Power BI visualizations to surface default probability patterns by customer profile.',
+        finding: 'Early payment behavior (specifically, consecutive missed minimum payments early in a customer\u2019s history) was a far stronger default signal than static profile attributes like income bracket \u2014 meaning the bank had an early-warning signal sitting in data it wasn\u2019t yet using that way.',
+        recommendation: 'Build an early-warning scorecard around payment-behavior signals rather than relying solely on static credit profile data, with the Power BI dashboard as the monthly portfolio risk review tool.',
+        result: 'Default risk quantified by behavioral segment, with an early-warning signal identified that was not previously tracked or acted on.'
+      },
+      {
+        id: 8,
+        filter: 'analysis',
+        tag: 'Data Analysis',
+        title: 'Shipping Courier Optimization',
+        desc: 'Delivery performance analysis for Indonesia courier services \u2014 identifying root-cause delay factors through SQL preprocessing and correlation analysis.',
+        stack: ['SQL', 'Python', 'Correlation Analysis'],
+        link: { label: 'View Case Study', url: 'https://github.com/Haniaghnia/Hani_Portfolio/blob/main/Tableau/How%20to%20Optimize%20Performance%20from%20Non-Delayed%20into%20Super%20On-Time%20Process%20for%20Shipping%20Courier%20in%20Indonesia/How%20to%20Optimize%20Performance%20from%20Non-Delayed%20into%20Super%20On-Time%20Process%20for%20Shipping%20Courier%20in%20Indonesia.md' },
+        context: 'Courier operations across Indonesia\u2019s multi-island logistics network needed to identify which factors driving delivery delay were actually controllable versus just background noise.',
+        approach: 'Used SQL for preprocessing \u2014 outlier removal, feature engineering, and transit-time calculations \u2014 then ran Pearson correlation analysis in Python to rank delay predictors.',
+        finding: 'Distance was a weaker delay predictor than package weight and origin-hub assignment \u2014 a counter-intuitive result that challenged the assumption underlying the existing route-optimization logic.',
+        recommendation: 'Prioritize weight-based routing logic over pure distance calculations, and flag the specific origin hubs implicated in the correlation analysis for an operational audit.',
+        result: 'Delay predictors ranked by statistical strength, directly challenging a prior operational assumption with data evidence.'
+      },
+      {
+        id: 9,
+        filter: 'ml',
+        tag: 'ML & Analytics',
+        title: 'Customer Lifetime Value Prediction',
+        desc: 'ML model predicting revenue by customer for proactive retention targeting and optimized resource allocation.',
+        stack: ['Python', 'Scikit-learn', 'Feature Engineering', 'Regression'],
+        link: { label: 'View Case Study', url: 'https://github.com/Haniaghnia/Hani_Portfolio/blob/main/Data%20Science/Machine%20Learning/RFM/Customer%20lifetime%20value.md' },
+        context: 'A common retention-budget problem: businesses often allocate retention resources reactively, after a churn signal already appears \u2014 by which point the best intervention window has usually passed.',
+        approach: 'Engineered behavioral features (purchase frequency, recency, average order value, engagement depth) and trained regression models to predict customer lifetime value, validated via cross-validation.',
+        finding: 'Predicted value was highly concentrated in a relatively small share of the customer base \u2014 the classic pattern where treating all customers with equal retention effort wastes budget on low-value accounts.',
+        recommendation: 'Segment retention spend by predicted CLV: concentrate high-touch retention effort on the high-value tier and automate lower-cost retention for the rest, rather than spreading budget evenly.',
+        result: 'Customers segmented by predicted lifetime value, enabling differentiated rather than uniform retention spend.'
+      },
+      {
+        id: 10,
+        filter: 'ml',
+        tag: 'ML & Analytics',
+        title: 'Lending Risk Prediction',
+        desc: 'Credit default prediction using Random Forest with AUC and KS evaluation \u2014 modeled as a decision-support tool for credit officers.',
+        stack: ['Python', 'Random Forest', 'Scikit-learn', 'AUC / KS Metrics'],
+        link: { label: 'View Case Study', url: 'https://github.com/Haniaghnia/Hani_Portfolio/blob/main/Data%20Science/Machine%20Learning/Lending%20company/Risk%20prediction%20lending%20company.md' },
+        context: 'Manual credit assessment is slow and inconsistent between reviewers \u2014 a lending company needed a way to process a higher volume of applications without proportionally increasing risk.',
+        approach: 'Built a Random Forest classifier on historical loan data, evaluated discrimination power via AUC and the Kolmogorov-Smirnov (KS) statistic, and ran feature importance analysis to explain the risk drivers.',
+        finding: 'Loan-to-income ratio and early repayment behavior outperformed most other candidate features (including loan amount and employment status) as default predictors \u2014 meaning a short, explainable feature set could do most of the work.',
+        recommendation: 'Deploy the model as a decision-support tool rather than a black-box auto-approver: use output percentile bands to standardize risk tiers for credit officers, keeping a human in the loop for the uncertain middle band.',
+        result: 'Top default predictors identified and explained, with a tiered decision framework proposed for credit officer workflow.'
+      },
+      {
+        id: 11,
+        filter: 'ml',
+        tag: 'ML & Analytics',
+        title: 'Car Price EDA',
+        desc: 'Python-based exploratory data analysis on vehicle pricing \u2014 univariate analysis, bivariate Pearson correlation, and ANOVA testing to quantify attribute-price relationships.',
+        stack: ['Python', 'Pandas', 'Scipy', 'Seaborn', 'ANOVA'],
+        link: { label: 'View Case Study', url: 'https://github.com/Haniaghnia/Hani_Portfolio/blob/35bedb89878f0ebe5c35b2661bc0649443987e0c/Data%20Science/EDA/EDA%20House%20Sales/EDA%20House%20Sales.md' },
+        context: 'A pricing-strategy question: of all the attributes that could plausibly affect a vehicle\u2019s resale value, which ones actually matter, and which are noise?',
+        approach: 'Ran a full EDA pipeline \u2014 univariate distributions for every attribute, bivariate Pearson correlation for continuous variables, and one-way ANOVA for categorical features.',
+        finding: 'Engine size and curb weight showed the strongest correlation with price among all variables tested, while some categorical features were statistically significant but had a much smaller practical effect on price.',
+        recommendation: 'Use engine size and curb weight as the primary pricing signals, and treat statistically-significant-but-small-effect features as secondary segmentation variables rather than primary price drivers.',
+        result: 'Attribute-price relationships ranked by statistical strength, separating meaningful pricing signals from noise.'
+      },
+      {
+        id: 12,
+        filter: 'sql',
+        tag: 'SQL',
+        title: 'eCommerce Business Performance Analysis',
+        desc: 'End-to-end SQL project \u2014 ERD design, customer activity metrics (new, active, repeat), product category revenue, and payment method analysis.',
+        stack: ['SQL', 'PostgreSQL', 'ERD Design', 'Tableau'],
+        link: { label: 'View Case Study', url: 'https://github.com/Haniaghnia/Hani_Portfolio/blob/main/SQL/Project/Analyzing%20eCommerce%20Business%20Performance.md' },
+        context: 'An e-commerce business had raw transactional data but no structured analytical layer \u2014 leadership had no reliable, repeatable way to see customer activity or product performance.',
+        approach: 'Built the ERD and data preparation layer from scratch, then wrote SQL queries across four domains: customer activity, new-vs-repeat behavior, product category revenue, and payment method distribution.',
+        finding: 'Repeat customers placed meaningfully larger average orders than new customers, yet made up a small share of the total customer base \u2014 pointing to an underused retention opportunity sitting inside data that had never been queried this way before.',
+        recommendation: 'Prioritize repeat-customer activation alongside new acquisition, and turn the product-category revenue query into a standing monthly reporting artifact rather than a one-off analysis.',
+        result: 'A complete analytical data model built from raw data, surfacing a retention opportunity that wasn\u2019t visible before the analysis.'
+      },
+      {
+        id: 13,
+        filter: 'analysis',
+        tag: 'Data Analysis',
+        title: 'Coffee Shop Development Analysis',
+        desc: 'Full Agile/SCRUM analytics project \u2014 BRD creation, multivariate EDA, customer segmentation by gender, loyalty, and age, and product & outlet performance strategy.',
+        stack: ['SQL', 'Tableau', 'Python', 'Agile / SCRUM'],
+        link: { label: 'View Case Study', url: 'https://github.com/Haniaghnia/Business_Analyst/blob/d1bbfd715f51ca59953e9c61417e0ba17a42d07c/Project%20BA/Coffee%20Shop/README.md' },
+        context: 'A new coffee shop product launch needed a data-driven foundation \u2014 from business requirements and stakeholder alignment through to which customer segment to actually target.',
+        approach: 'Ran the full project lifecycle via Agile: stakeholder discovery sessions, BRD creation, SQL data exploration, Tableau dashboards, and multivariate EDA segmenting customers by gender, loyalty status, and age.',
+        finding: 'Loyalty program members were concentrated in a specific age bracket and spent noticeably more per visit than non-members \u2014 a demographic that current marketing and product positioning underrepresented.',
+        recommendation: 'Target loyalty program acquisition toward the identified age bracket as the primary growth lever, and realign product mix at top-performing outlets based on the segment-level preference data.',
+        result: 'Full project lifecycle delivered end-to-end, with a customer segmentation model surfacing a specific, underrepresented demographic as the clearest growth lever.'
+      }
+    ];
+
+    /* --------------------------------------------------
+       RENDER PROJECTS
+    -------------------------------------------------- */
+    function chevronSVG() {
+      return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+    }
+
+    function renderProjects(filter) {
+      var grid = document.getElementById('proj-grid');
+      var list = filter === 'all' ? PROJECTS : PROJECTS.filter(function(p) { return p.filter === filter; });
+
+      grid.innerHTML = list.map(function(p) {
+        return [
+          '<article class="proj-card reveal" role="listitem" data-pid="' + p.id + '">',
+          p.image ? '  <div class="proj-image-wrap"><img src="' + p.image + '" alt="' + p.title + ' dashboard screenshot" loading="lazy" /></div>' : '',
+          '  <div class="proj-body">',
+          '    <span class="proj-cat">' + p.tag + '</span>',
+          '    <h3 class="proj-title">' + p.title + '</h3>',
+          '    <p class="proj-desc">' + p.desc + '</p>',
+          '    <div class="proj-stack">' + p.stack.map(function(s) { return '<span class="proj-stag">' + s + '</span>'; }).join('') + '</div>',
+          p.link ? '    <div class="proj-links"><a class="proj-link-btn" href="' + p.link.url + '" target="_blank" rel="noopener noreferrer">' + p.link.label + '</a></div>' : '',
+          '    <button class="proj-expand" aria-expanded="false" aria-label="View details for ' + p.title + '">',
+          '      View Details ' + chevronSVG(),
+          '    </button>',
+          '  </div>',
+          '  <div class="proj-detail" role="region" aria-label="' + p.title + ' details">',
+          '    <div class="proj-detail-body">',
+          '      <div class="det-block"><div class="det-label">Context</div><p class="det-text">' + p.context + '</p></div>',
+          '      <div class="det-block"><div class="det-label">Approach</div><p class="det-text">' + p.approach + '</p></div>',
+          '      <div class="det-block"><div class="det-label">Finding</div><p class="det-text">' + p.finding + '</p></div>',
+          '      <div class="det-block"><div class="det-label">Recommendation</div><p class="det-text">' + p.recommendation + '</p></div>',
+          p.result ? '      <div class="det-block"><div class="det-label">Result</div><p class="det-text">' + p.result + '</p></div>' : '',
+          '    </div>',
+          '  </div>',
+          '</article>'
+        ].join('');
+      }).join('');
+
+      observeReveal();
+      bindExpandButtons();
+    }
+
+    function bindExpandButtons() {
+      document.querySelectorAll('.proj-expand').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var card   = this.closest('.proj-card');
+          var detail = card.querySelector('.proj-detail');
+          var open   = detail.classList.toggle('open');
+          this.classList.toggle('open', open);
+          this.setAttribute('aria-expanded', open);
+          if (open) {
+            // slight scroll to make detail visible
+            setTimeout(function() { detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 50);
+          }
+        });
+      });
+    }
+
+    /* --------------------------------------------------
+       TAB FILTER
+    -------------------------------------------------- */
+    document.querySelectorAll('.tab-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.tab-btn').forEach(function(b) {
+          b.classList.remove('active');
+          b.setAttribute('aria-selected', 'false');
+        });
+        this.classList.add('active');
+        this.setAttribute('aria-selected', 'true');
+        renderProjects(this.dataset.filter);
+      });
+    });
+
+    renderProjects('all');
+
+    /* --------------------------------------------------
+       SCROLL REVEAL (IntersectionObserver)
+    -------------------------------------------------- */
+    function observeReveal() {
+      if (!window.IntersectionObserver) {
+        document.querySelectorAll('.reveal').forEach(function(el) { el.classList.add('visible'); });
+        return;
+      }
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.10, rootMargin: '0px 0px -40px 0px' });
+
+      document.querySelectorAll('.reveal:not(.visible)').forEach(function(el) { io.observe(el); });
+    }
+
+    // Trigger hero on load
+    var heroEls = document.querySelectorAll('#hero .reveal');
+    heroEls.forEach(function(el, i) {
+      setTimeout(function() { el.classList.add('visible'); }, 120 + i * 130);
+    });
+
+    observeReveal();
+
+    /* --------------------------------------------------
+       ANIMATED COUNTERS
+    -------------------------------------------------- */
+    function animateCounter(el) {
+      var target   = parseInt(el.dataset.target, 10);
+      var duration = 1800;
+      var start    = performance.now();
+
+      function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+      function tick(now) {
+        var p = Math.min((now - start) / duration, 1);
+        el.textContent = Math.round(easeOut(p) * target);
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    if (window.IntersectionObserver) {
+      var cio = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            animateCounter(entry.target);
+            cio.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.6 });
+      document.querySelectorAll('.counter').forEach(function(el) { cio.observe(el); });
+    }
+
+    /* --------------------------------------------------
+       NAV SCROLL STATE
+    -------------------------------------------------- */
+    var nav = document.getElementById('nav');
+    function onScroll() {
+      nav.classList.toggle('scrolled', window.pageYOffset > 55);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    /* --------------------------------------------------
+       MOBILE NAV BURGER
+    -------------------------------------------------- */
+    var burger   = document.getElementById('nav-burger');
+    var navLinks = document.getElementById('nav-links');
+
+    burger.addEventListener('click', function() {
+      var open = navLinks.classList.toggle('open');
+      this.setAttribute('aria-expanded', open);
+    });
+
+    navLinks.querySelectorAll('a').forEach(function(a) {
+      a.addEventListener('click', function() {
+        navLinks.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    /* --------------------------------------------------
+       HERO CANVAS — Data Network Particle Animation
+    -------------------------------------------------- */
+    (function initCanvas() {
+      var canvas = document.getElementById('hero-canvas');
+      if (!canvas) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        canvas.style.display = 'none';
+        return;
+      }
+
+      var ctx = canvas.getContext('2d');
+      var W, H, pts, raf;
+      var N        = 55;
+      var MAX_DIST = 155;
+      var ACCENT_R = 0, ACCENT_G = 201, ACCENT_B = 167;
+
+      function resize() {
+        W = canvas.width  = canvas.parentElement.offsetWidth;
+        H = canvas.height = canvas.parentElement.offsetHeight;
+      }
+
+      function mkPts() {
+        pts = [];
+        for (var i = 0; i < N; i++) {
+          pts.push({
+            x:  Math.random() * W,
+            y:  Math.random() * H,
+            vx: (Math.random() - 0.5) * 0.3,
+            vy: (Math.random() - 0.5) * 0.3,
+            r:  Math.random() * 1.5 + 0.8
+          });
+        }
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        var i, j, p, q, dx, dy, d, a;
+
+        for (i = 0; i < N; i++) {
+          for (j = i + 1; j < N; j++) {
+            p = pts[i]; q = pts[j];
+            dx = p.x - q.x; dy = p.y - q.y;
+            d  = Math.sqrt(dx * dx + dy * dy);
+            if (d < MAX_DIST) {
+              a = (1 - d / MAX_DIST) * 0.16;
+              ctx.beginPath();
+              ctx.strokeStyle = 'rgba(' + ACCENT_R + ',' + ACCENT_G + ',' + ACCENT_B + ',' + a + ')';
+              ctx.lineWidth   = 0.75;
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(q.x, q.y);
+              ctx.stroke();
+            }
+          }
+        }
+
+        for (i = 0; i < N; i++) {
+          p = pts[i];
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(' + ACCENT_R + ',' + ACCENT_G + ',' + ACCENT_B + ',0.5)';
+          ctx.fill();
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0 || p.x > W) p.vx *= -1;
+          if (p.y < 0 || p.y > H) p.vy *= -1;
+        }
+
+        raf = requestAnimationFrame(draw);
+      }
+
+      resize();
+      mkPts();
+      draw();
+
+      var ro = new ResizeObserver(function() { resize(); mkPts(); });
+      ro.observe(canvas.parentElement);
+
+      // Pause when tab is hidden (performance)
+      document.addEventListener('visibilitychange', function() {
+        if (document.hidden) { cancelAnimationFrame(raf); }
+        else { draw(); }
+      });
+    })();
+
+  }());
+  </script>
+</body>
+</html>
